@@ -29,7 +29,7 @@ typedef struct {
   uint8_t joyId;
 } switch_t;
 
-#define SWITCH_COUNT 7
+#define SWITCH_COUNT 8
 
 switch_t switches[SWITCH_COUNT] = {
   {4, 12, 1}, // A
@@ -41,14 +41,16 @@ switch_t switches[SWITCH_COUNT] = {
   {10, 19, 7}, // START
   {11, 0, 8} // TEST (no led)
 };
-
+void ButtonChange(uint id) {
+  usb_arcade_data[0] ^= 1 << id; // toggle the state of the button id
+  Arcade.send_now(); // the state changed so we send it.
+}
 void setup()
 {
   for (int i = 0; i < SWITCH_COUNT; i++) {
     pinMode(switches[i].switchPin, INPUT_PULLUP);
     pinMode(switches[i].lightPin, OUTPUT);
   }
-  pinMode(5, OUTPUT);
   Serial.begin(57600);
   Arcade.useManualSend(true); // lets reduce the calls
 }
@@ -73,6 +75,7 @@ void loop() {
     Serial.print(n);
     Serial.print((uint32_t) buffer);
   }
+  Serial.print("This is am message");
   for (int i = 0; i < ENCODER_COUNT; i++) {
     long encVal = encoders[i].enc.read();
     if (encVal != 0) {
@@ -88,7 +91,4 @@ void loop() {
   delay(DELAY);
 }
 
-void ButtonChange(uint id) {
-  usb_arcade_data[0] ^= 1 << id; // toggle the state of the button id
-  Arcade.send_now(); // the state changed so we send it.
-}
+
