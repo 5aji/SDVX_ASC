@@ -2,39 +2,7 @@
 
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
-#define DELAY     1  // Delay per loop in ms
-
-typedef struct {
-  Encoder enc;
-  char axis;
-} encoder_t;
-
-#define ENCODER_COUNT 2
-
-encoder_t encoders[ENCODER_COUNT] = {
-  {Encoder(1, 0), 'x'},
-  {Encoder(2, 3), 'y'}
-};
-
-typedef struct {
-  uint8_t switchPin;
-  uint8_t lightPin;
-  uint8_t joyId;
-} switch_t;
-
-#define SWITCH_COUNT 8
-
-switch_t switches[SWITCH_COUNT] = {
-  {4, 12, 1},   // A
-  {5, 14, 2},   // B
-  {6, 15, 3},   // C
-  {7, 16, 4},   // D
-  {8, 17, 5},   // FX A
-  {9, 18, 6},   // FX B
-  {10, 13, 7},  // START
-  {11, 19, 8},  // TEST (no led)
-};
-
+#include "sdvx.h"
 
 // TODO: Test poll vs interrupt for buttons
 void setup()
@@ -56,9 +24,11 @@ void loop() {
   int n = Arcade.recv(buffer, 0); // 0 timeout = do not wait
   // TODO: Actually get receiving working.
   if (n > 0) {
+#ifdef DEBUG
     Serial.print("Received: ");
     Serial.print(n);
     Serial.print((uint32_t) buffer);
+#endif
   }
 
   // Read and set all the bytes for the buttons
@@ -70,7 +40,7 @@ void loop() {
       Arcade.button(switches[i].joyId, 1);
     }
     // Hacky instant write
-    // TODO: check if bit-banging is more efficient
+    // TODO: check if bit-tweaking is more efficient
     // usb_arcade_data[0] ^= (digitalRead(switches[i].switchPin) ^ usb_arcade_data[0]) & (1 << i);
   }
 
@@ -90,11 +60,13 @@ void loop() {
     // the button state has changed, send and reset it.
     Arcade.send_now();
     memcpy(lastSentState, usb_arcade_data, sizeof(lastSentState));
+#ifdef DEBUG
     Serial.print("New State: ");
     Serial.printf("%02x", usb_arcade_data[0]);
     Serial.printf("%02x", usb_arcade_data[1]);
     Serial.printf("%02x", usb_arcade_data[2]);
     Serial.println();
+#endif
   }
 
   delay(DELAY);

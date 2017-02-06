@@ -1,65 +1,32 @@
-# teensy-cmake
-Mac only! help make this work on other platforms.
-teensy-cmake is a template for Teensy projects that uses CMake to build your sketches.
-It is forked from https://github.com/xya/teensy-cmake and is intended to be simpler and also it works on Mac OS.
-This lets you develop for Teensy using your favorite text editor and terminal. 
-I use Clion: https://www.jetbrains.com/clion/ which can easily import CMake projects. 
-CLion is a great IDE and even has a Serial console plugin available so you never need to open the Arduino IDE again.
+# SDVX ASC
 
-This has been tested on Mac OS 10.11.2 with a Teensy 3.2
-# Requirements- install newer/older versions at your peril!
+A Teensy-powered firmware for a custom SDVX controller.
+Features include a HID lighting system for use with games that support it,
+reactive lighting that can be enabled, and optimized USB dataflow for faster
+response time. Can use any RGB LEDs that support the FastLed library, or
+single-color LEDs with direct write.
 
- * Install homebrew if you don't have it: http://brew.sh/
- * Cmake. To install run ```brew install cmake```
- * XCode (perhaps not needed, but it typically installs a variety of useful tools)
- * Arduino 1.6.7: https://www.arduino.cc/download_handler.php?f=/arduino-1.6.7-macosx.zip
- * Teensyduino 1.27: https://www.pjrc.com/teensy/td_127/teensyduino.dmg
- * TyQT (https://github.com/Koromix/ty) 0.7.0 prerelease: https://www.dropbox.com/s/du62rjurw1mdg75/TyQt-0.6.3-250-g0a71b13-osx.dmg?dl=0 discussed here: https://forum.pjrc.com/threads/27825-Teensy-Qt?p=90594&viewfull=1%23post90594
+#### Libaries
 
-Once all the above items have been installed it is probably a good idea to test out your Teensy with the Arduino app. Try uploading an example sketch.
+This program uses a modified set of the Teensy Core Libraries for 3.2. See the teensy lib
+repo.
 
-Create a build directory:
+## Options
 
-# Building
+There are a variety of options that can be manipulated both in the code
+and by using the controller itself.
 
-```bash
-mkdir build
-cd build
-```
+#### Compile-time Options
 
-Run CMake:
-```bash
-cmake ..
-```
+By defining the `DEBUG` macro in [sdvx.h](sdvx.h) the Teensy will send
+information over the emulated Serial. Use the Teensy toolchain to read the
+output.
 
-Build with:
-```bash
-make -j main
-```
+All mappings are editable in [sdvx.h](sdvx.h). Changing the mappings
+according to the structure will edit all references.
 
-# Flashing sketches to the Teensy
-```bash
-make -j main_Upload
-```
-
-# Custom configuration
-
-For some sketches, the Teensy needs to run in a different 'USB mode'. You can set this in the sketch's CMakeLists.txt file:
-
-```
-set(TEENSY_USB_MODE MIDI)
-
-add_teensy_executable(...)
-```
-
-You can set the 'default' mode in the CMake GUI ('TEENSY_USB_MODE' variable).
-
-# Importing libraries
-
-Here is a simple example of how to import a library:
-
-```
-import_arduino_library(Bounce)
-
-add_teensy_executable(...)
-```
+Defining `USE_FASTLED` will enable the system to write the LED output
+to FastLED supported addressable LEDs. This allows you to define custom colors
+as well as use RGB output over HID where supported. (Note that this will
+require some modification of the HID report descriptors as well as setup
+of the FastLED library)

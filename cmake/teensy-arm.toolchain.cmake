@@ -23,9 +23,8 @@
 
 set(TRIPLE "arm-none-eabi")
 
-set(LIB_ROOT "/Users/kschamplin19/Desktop/libroot" CACHE PATH "Path to the Arduino application")
-set(TEENSY_CORES_ROOT "${LIB_ROOT}/cores" CACHE PATH "Path to the Teensy 'cores' repository")
-set(TEENSY_ROOT "${TEENSY_CORES_ROOT}/teensy3")
+set(LIB_ROOT "/Users/kschamplin19/Documents/teensy_libs" CACHE PATH "Path to the Arduino application")
+set(TEENSY_ROOT "${LIB_ROOT}/core")
 set(TOOLCHAIN_ROOT ${LIB_ROOT}/toolchain/arm)
 set(ARDUINO_LIB_ROOT "${LIB_ROOT}/libraries" CACHE PATH "Path to the Arduino library directory")
 set(ARDUINO_VERSION "106" CACHE STRING "Version of the Arduino SDK")
