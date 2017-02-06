@@ -23,7 +23,7 @@
 
 set(TRIPLE "arm-none-eabi")
 
-set(LIB_ROOT "/Users/kschamplin19/Documents/teensy_libs" CACHE PATH "Path to the Arduino application")
+set(LIB_ROOT "/Users/kschamplin19/Documents/SDVX_ASC/teensy_libs" CACHE PATH "Path to the Arduino application")
 set(TEENSY_ROOT "${LIB_ROOT}/core")
 set(TOOLCHAIN_ROOT ${LIB_ROOT}/toolchain/arm)
 set(ARDUINO_LIB_ROOT "${LIB_ROOT}/libraries" CACHE PATH "Path to the Arduino library directory")
@@ -36,7 +36,7 @@ set(TEENSY_FREQUENCY "72" CACHE STRING "Frequency of the Teensy MCU (Mhz)")
 set_property(CACHE TEENSY_FREQUENCY PROPERTY STRINGS 96 72 48 24 16 8 4 2)
 
 set(TEENSY_USB_MODE "SERIAL" CACHE STRING "What kind of USB device the Teensy should emulate")
-set_property(CACHE TEENSY_USB_MODE PROPERTY STRINGS SERIAL HID SERIAL_HID MIDI RAWHID FLIGHTSIM)
+set_property(CACHE TEENSY_USB_MODE PROPERTY STRINGS SERIAL HID SERIAL_HID ARCADE MIDI RAWHID FLIGHTSIM)
 
 if(WIN32)
     set(TOOL_OS_SUFFIX .exe)
