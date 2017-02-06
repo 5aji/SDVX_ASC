@@ -1,0 +1,3 @@
+[submodule "teensy_libs"]
+	path = teensy_libs
+	url = https://github.com/kschamplin19/teensy_libs
