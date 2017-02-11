@@ -33,5 +33,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(Teensy)
 import_arduino_library(Encoder)
+import_arduino_library(FastLED)
 set(TEENSY_USB_MODE ARCADE)
 add_teensy_executable(sdvx sdvx.cpp)

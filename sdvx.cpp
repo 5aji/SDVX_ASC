@@ -1,8 +1,10 @@
-#include <Arduino.h>
 
-#define ENCODER_OPTIMIZE_INTERRUPTS
-#include <Encoder.h>
 #include "sdvx.h"
+
+#ifdef USE_FASTLED
+
+CRGB crgb[LED_COUNT];
+#endif
 
 // TODO: Test poll vs interrupt for buttons
 void setup()
@@ -14,7 +16,10 @@ void setup()
 
   Serial.begin(57600);
   Arcade.useManualSend(true); // lets reduce the calls
-
+#ifdef USE_FASTLED
+  //FIXME: Why does this error?
+    FastLED.addLeds<NEOPIXEL, DATA_PIN>(crgb, LED_COUNT);
+#endif
 }
 
 uint8_t buffer[2];
@@ -60,16 +65,20 @@ void loop() {
     // the button state has changed, send and reset it.
     Arcade.send_now();
     memcpy(lastSentState, usb_arcade_data, sizeof(lastSentState));
-#ifdef DEBUG
+    #ifdef DEBUG
     Serial.print("New State: ");
     Serial.printf("%02x", usb_arcade_data[0]);
     Serial.printf("%02x", usb_arcade_data[1]);
     Serial.printf("%02x", usb_arcade_data[2]);
     Serial.println();
-#endif
+    #endif
   }
+  for (int i = 0; i < LED_COUNT; i++) {
 
+#ifdef USE_FASTLED
+    // FASTLED mode!
+#endif
+
+  }
   delay(DELAY);
 }
-
-

@@ -1,20 +1,23 @@
 //
 // Created by kschamplin19 on 2/5/17.
 //
+#include <Arduino.h>
 
+#define ENCODER_OPTIMIZE_INTERRUPTS
+#include <Encoder.h>
 #ifndef SDVX_ASC_SDVX_H
 #define SDVX_ASC_SDVX_H
 
 #define DELAY     1  // Delay per loop in ms
 #define DEBUG // enable serial out
-
 #ifdef USE_FASTLED
-#include "FastLED.h"
+#include <FastLED.h>
 #define LED_COUNT 10 // Number of LEDs to add
+#define DATA_PIN
 #define BT_COLOR 190 // the HUE for the BT buttons
 #define FX_COLOR 20 // same for FX
 #else
-
+#define LED_COUNT 10 // Number of LEDs to add
 #endif
 typedef struct {
   Encoder enc;
@@ -51,7 +54,7 @@ switch_t switches[SWITCH_COUNT] = {
 };
 
 #ifdef DEBUG
-#define BREAK(x) Serial.print("Break Called at: "); \
+#define BREAK() Serial.print("Break Called at: "); \
   Serial.print(__FILE__); \
   Serial.print(' '); \
   Serial.print(__LINE__); \
