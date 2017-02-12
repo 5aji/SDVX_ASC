@@ -10,15 +10,7 @@
 
 #define DELAY     1  // Delay per loop in ms
 #define DEBUG // enable serial out
-#ifdef USE_FASTLED
-#include <FastLED.h>
-#define LED_COUNT 10 // Number of LEDs to add
-#define DATA_PIN
-#define BT_COLOR 190 // the HUE for the BT buttons
-#define FX_COLOR 20 // same for FX
-#else
-#define LED_COUNT 10 // Number of LEDs to add
-#endif
+
 typedef struct {
   Encoder enc;
   char axis;
@@ -33,7 +25,6 @@ encoder_t encoders[ENCODER_COUNT] = {
 
 typedef struct {
   uint8_t switchPin;
-  uint8_t lightPin;
   uint8_t joyId;
 } switch_t;
 
@@ -43,24 +34,41 @@ typedef struct {
 // some notes about LED lights
 // for fast LED we need to use light ID instead of Pin.
 switch_t switches[SWITCH_COUNT] = {
-    {4, 12, 1},   // A
-    {5, 14, 2},   // B
-    {6, 15, 3},   // C
-    {7, 16, 4},   // D
-    {8, 17, 5},   // FX A
-    {9, 18, 6},   // FX B
-    {10, 13, 7},  // START
-    {11, 19, 8},  // TEST (no led)
+    {4, 1},   // A
+    {5, 2},   // B
+    {6, 3},   // C
+    {7, 4},   // D
+    {8, 5},   // FX A
+    {9, 6},   // FX B
+    {10, 7},  // START
+    {11, 8},  // TEST (no led)
 };
 
-#ifdef DEBUG
-#define BREAK() Serial.print("Break Called at: "); \
-  Serial.print(__FILE__); \
-  Serial.print(' '); \
-  Serial.print(__LINE__); \
-  Serial.print(' '); \
-  Serial.println(__FUNCTION__); \
-  while(!Serial.available()) {}
+#ifdef USE_FASTLED
+#include <FastLED.h>
+#define LED_COUNT 10 // Number of LEDs to add
+#define DATA_PIN
+#define BT_COLOR 190 // the HUE for the BT buttons
+#define FX_COLOR 20 // same for FX
+#else
+#define LED_COUNT 8 // Number of LEDs to add
 #endif
+
+typedef struct {
+  uint8_t pin;
+  uint32_t hue;
+} led_t;
+
+led_t leds[LED_COUNT] = {
+    {13, 0},
+    {14, 0},
+    {15, 0},
+    {16, 0},
+    {17, 0},
+    {18, 0},
+    {19, 0},
+    {20, 0},
+};
+
 
 #endif //SDVX_ASC_SDVX_H

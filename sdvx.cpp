@@ -11,9 +11,10 @@ void setup()
 {
   for (int i = 0; i < SWITCH_COUNT; i++) {
     pinMode(switches[i].switchPin, INPUT_PULLUP);
-    pinMode(switches[i].lightPin, OUTPUT);
   }
-
+  for (int i = 0; i < LED_COUNT; i++) {
+    pinMode(leds[i].pin, OUTPUT);
+  }
   Serial.begin(57600);
   Arcade.useManualSend(true); // lets reduce the calls
 #ifdef USE_FASTLED
@@ -22,19 +23,11 @@ void setup()
 #endif
 }
 
-uint8_t buffer[2];
+uint32_t buffer[1];
 uint8_t lastSentState[3]; // the state of the last sent buttons
 
 void loop() {
-  int n = Arcade.recv(buffer, 0); // 0 timeout = do not wait
-  // TODO: Actually get receiving working.
-  if (n > 0) {
-#ifdef DEBUG
-    Serial.print("Received: ");
-    Serial.print(n);
-    Serial.print((uint32_t) buffer);
-#endif
-  }
+  Arcade.recv(buffer, 0); // 0 timeout = do not wait
 
   // Read and set all the bytes for the buttons
   for (int i = 0; i < SWITCH_COUNT; i++) {
@@ -44,8 +37,9 @@ void loop() {
     } else {
       Arcade.button(switches[i].joyId, 1);
     }
-    // Hacky instant write
+    // Hack instant write
     // TODO: check if bit-tweaking is more efficient
+    // it may compile to the same stuff
     // usb_arcade_data[0] ^= (digitalRead(switches[i].switchPin) ^ usb_arcade_data[0]) & (1 << i);
   }
 
@@ -61,24 +55,22 @@ void loop() {
     }
   }
 
+  for (int i = 0; i < LED_COUNT; i++) {
+    // we have LEDs and a buffer
+    // set the buffer pos to the led pin
+    digitalWrite(leds[i].pin, (buffer[0] >> i) & 1);
+  }
   if ( memcmp(usb_arcade_data, lastSentState, sizeof(usb_arcade_data)) != 0 ) {
     // the button state has changed, send and reset it.
     Arcade.send_now();
     memcpy(lastSentState, usb_arcade_data, sizeof(lastSentState));
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.print("New State: ");
     Serial.printf("%02x", usb_arcade_data[0]);
     Serial.printf("%02x", usb_arcade_data[1]);
     Serial.printf("%02x", usb_arcade_data[2]);
     Serial.println();
-    #endif
-  }
-  for (int i = 0; i < LED_COUNT; i++) {
-
-#ifdef USE_FASTLED
-    // FASTLED mode!
 #endif
-
   }
   delay(DELAY);
 }
