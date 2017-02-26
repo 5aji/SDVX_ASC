@@ -7,9 +7,10 @@
 #include <Encoder.h>
 #ifndef SDVX_ASC_SDVX_H
 #define SDVX_ASC_SDVX_H
-
+#define DEBUG
 #define DELAY     1  // Delay per loop in ms
-#define DEBUG // enable serial out
+
+// #define DEBUG
 
 typedef struct {
   Encoder enc;
@@ -30,9 +31,6 @@ typedef struct {
 
 #define SWITCH_COUNT 8
 
-
-// some notes about LED lights
-// for fast LED we need to use light ID instead of Pin.
 switch_t switches[SWITCH_COUNT] = {
     {4, 1},   // A
     {5, 2},   // B
@@ -52,23 +50,25 @@ switch_t switches[SWITCH_COUNT] = {
 #define FX_COLOR 20 // same for FX
 #else
 #define LED_COUNT 8 // Number of LEDs to add
-#endif
 
 typedef struct {
   uint8_t pin;
-  uint32_t hue;
 } led_t;
 
-led_t leds[LED_COUNT] = {
-    {13, 0},
-    {14, 0},
-    {15, 0},
-    {16, 0},
-    {17, 0},
-    {18, 0},
-    {19, 0},
-    {20, 0},
+// some notes about LED lights
+// for fast LED we need to use light ID instead of Pin.
+led_t LEDs[LED_COUNT] = {
+    {13},
+    {14},
+    {15},
+    {16},
+    {17},
+    {18},
+    {19},
+    {20},
 };
+#endif
+
 
 
 #endif //SDVX_ASC_SDVX_H
